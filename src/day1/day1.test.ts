@@ -1,16 +1,27 @@
 import { logAnswer } from '../utils/logging';
-import { calculateFuelForMass, day1 } from './day1';
+import { day1, day1part2 } from './day1';
 import { data } from './day1.data';
 
-test('Provided test cases', () => {
-  expect(calculateFuelForMass(12)).toBe(2);
-  expect(calculateFuelForMass(14)).toBe(2);
-  expect(calculateFuelForMass(1969)).toBe(654);
-  expect(calculateFuelForMass(100756)).toBe(33583);
+test('day1 test cases', () => {
+  const testData = [1721, 979, 366, 299, 675, 1456];
+  expect(day1(testData)).toBe(514579);
 });
 
-test('Returns an answer', () => {
-  logAnswer(day1(data));
-  expect(typeof day1(data)).toBe('number');
-  expect(day1(data)).toBeGreaterThan(0);
+test('day1 answer', () => {
+  const answer = day1(data);
+  logAnswer(answer, 1, 2);
+  expect(typeof answer).toBe('number');
+  expect(answer).toBe(73371);
+});
+
+test('day1 part2 test case', () => {
+  const testData = [1721, 979, 366, 299, 675, 1456];
+  expect(day1part2(testData)).toBe(241861950);
+});
+
+test('day1 part2 answer', () => {
+  const answer = day1part2(data);
+  logAnswer(answer, 1, 2);
+  expect(typeof answer).toBe('number');
+  expect(answer).toBe(127642310);
 });
