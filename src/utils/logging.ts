@@ -1,7 +1,7 @@
-export const logAnswer = (answer: any) => {
-  process.stdout.write(`\n\n-----------------
-Answer: ${answer}
------------------\n\n`);
+export const logAnswer = (answer: any, day: number, part: number) => {
+  process.stdout.write(`\n\n-----------------------------------
+Answer Day ${day} Part ${part}: ${answer}
+-----------------------------------\n\n`);
 };
 
 export const log = (...args: any[]) => {
