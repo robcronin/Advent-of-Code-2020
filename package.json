@@ -3,8 +3,7 @@
     "test": "jest --watch",
     "test:all": "jest",
     "compile": "tsc",
-    "day": "scripts/newDay.sh",
-    "part2": "scripts/partTwo.sh"
+    "day": "scripts/newDay.sh"
   },
   "name": "advent-of-code-typescript-starter",
   "version": "1.0.0",
