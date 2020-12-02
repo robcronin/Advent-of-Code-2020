@@ -1,4 +1,4 @@
-import { parseInput } from '../input';
+import { parseInput, parsePasswordConfigs } from '../input';
 
 test('Parses a newline delimited array of numbers', () => {
   const input = `142195
@@ -27,4 +27,30 @@ test('Parses a comma delimited array of strings', () => {
 test('Returns an array if no delimiter present', () => {
   const input = '22222';
   expect(parseInput(input)).toStrictEqual([2, 2, 2, 2, 2]);
+});
+
+test('parsePasswordConfigs', () => {
+  const input = `1-3 a: abcde
+  1-3 b: cdefg
+  2-9 c: ccccccccc`;
+  expect(parsePasswordConfigs(input)).toEqual([
+    {
+      start: 1,
+      end: 3,
+      letter: 'a',
+      password: 'abcde',
+    },
+    {
+      start: 1,
+      end: 3,
+      letter: 'b',
+      password: 'cdefg',
+    },
+    {
+      start: 2,
+      end: 9,
+      letter: 'c',
+      password: 'ccccccccc',
+    },
+  ]);
 });
