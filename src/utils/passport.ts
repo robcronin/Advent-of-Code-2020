@@ -18,36 +18,18 @@ export const isValidIssueYear = (iyr: string | undefined): boolean =>
 export const isValidExpirationYear = (eyr: string | undefined): boolean =>
   !!eyr && +eyr >= 2020 && +eyr <= 2030;
 
-export const isValidHeight = (hgt: string | undefined): boolean => {
-  if (!hgt) return false;
-  const unit = hgt.slice(-2);
-  if (unit !== 'cm' && unit !== 'in') return false;
-  const value = hgt.slice(0, hgt.length - 2);
-  if (unit === 'cm' && +value >= 150 && +value <= 193) return true;
-  if (unit === 'in' && +value >= 59 && +value <= 76) return true;
-  return false;
-};
+export const isValidHeight = (hgt: string | undefined): boolean =>
+  !!hgt &&
+  !!hgt.match(new RegExp('^((1[5-8][0-9]|19[0-3])cm)|((59|6[0-9]|7[0-6])in)$'));
 
-export const isValidHairColor = (hcl: string | undefined): boolean => {
-  return !!hcl && !!hcl.match(new RegExp('^#[0-9A-Fa-f]{6}$'));
-};
+export const isValidHairColor = (hcl: string | undefined): boolean =>
+  !!hcl && !!hcl.match(new RegExp('^#[0-9A-Fa-f]{6}$'));
 
-export const isValidEyeColor = (ecl: string | undefined): boolean => {
-  return (
-    !!ecl &&
-    (ecl === 'amb' ||
-      ecl === 'blu' ||
-      ecl === 'brn' ||
-      ecl === 'gry' ||
-      ecl === 'grn' ||
-      ecl === 'hzl' ||
-      ecl === 'oth')
-  );
-};
+export const isValidEyeColor = (ecl: string | undefined): boolean =>
+  !!ecl && !!ecl.match(new RegExp('^blu|amb|brn|gry|grn|hzl|oth$'));
 
-export const isValidPID = (pid: string | undefined): boolean => {
-  return !!pid && !!pid.match(new RegExp('^[0-9]{9}$'));
-};
+export const isValidPID = (pid: string | undefined): boolean =>
+  !!pid && !!pid.match(new RegExp('^[0-9]{9}$'));
 
 export const isValidNorthPoleCredentials = (passport: Passport) =>
   isValidBirthYear(passport.byr) &&

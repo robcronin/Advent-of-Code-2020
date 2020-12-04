@@ -141,8 +141,11 @@ describe('validation rules', () => {
     it('should return true for valid eye color', () => {
       expect(isValidEyeColor('blu')).toBe(true);
     });
-    it('should return false for invalud eye color', () => {
+    it('should return false for invalid eye color', () => {
       expect(isValidEyeColor('red')).toBe(false);
+    });
+    it('should return false for partial valid eye color', () => {
+      expect(isValidEyeColor('b')).toBe(false);
     });
     it('should return false for undefined', () => {
       expect(isValidEyeColor(undefined)).toBe(false);
