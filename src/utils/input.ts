@@ -5,6 +5,17 @@ export interface PasswordConfig {
   password: string;
 }
 
+export interface Passport {
+  byr?: string;
+  iyr?: string;
+  eyr?: string;
+  hgt?: string;
+  hcl?: string;
+  ecl?: string;
+  pid?: string;
+  cid?: string;
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -41,5 +52,26 @@ export const parsePasswordConfigs = (input: string): PasswordConfig[] => {
       letter,
       password,
     };
+  });
+};
+
+// 🤢 but works
+export const parsePassports = (input: string): Passport[] => {
+  const inputArray = input.split('\n\n');
+  const trimmed = inputArray.map((e) => e.trim());
+  return trimmed.map((e) => {
+    const passportRows = e.split('\n');
+    const trimmedPassportRows = passportRows.map((e) => e.trim());
+    const keyValues = trimmedPassportRows.reduce(
+      (acc: string[], row) => [...acc, ...row.split(' ')],
+      [],
+    );
+    return keyValues.reduce((acc, keyValue) => {
+      const [key, value] = keyValue.split(':');
+      return {
+        ...acc,
+        [key]: value,
+      };
+    }, {});
   });
 };
