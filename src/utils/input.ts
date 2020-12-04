@@ -28,41 +28,43 @@ const getDelimiter = (input: string) => {
 
 const mapToNumberIfNecessary = (input: string[]) => {
   if (input.every((value) => !isNaN(Number(value)))) {
-    return input.map((e) => Number(e));
+    return input.map((element) => Number(element));
   }
   return input;
 };
 
+const parseLines = (input: string, delimiter?: string) => {
+  const inputArray = input.split(delimiter || getDelimiter(input));
+  return inputArray.map((element) => element.trim());
+};
+
 export const parseInput = (input: string) => {
-  const inputArray = input.split(getDelimiter(input));
-  const trimmed = inputArray.map((e) => e.trim());
-  return mapToNumberIfNecessary(trimmed);
+  const parsed = parseLines(input);
+  return mapToNumberIfNecessary(parsed);
 };
 
 export const parsePasswordConfigs = (input: string): PasswordConfig[] => {
-  const inputArray = input.split(getDelimiter(input));
-  const trimmed = inputArray.map((e) => e.trim());
-  return trimmed.map((e) => {
-    const [range, letterColon, password] = e.split(' ');
-    const [startString, endString] = range.split('-');
-    const letter = letterColon[0];
+  const parsed = parseLines(input);
+  return parsed.map((element) => {
+    const groups = element.match(
+      new RegExp('^([0-9]+)-([0-9]+) ([A-Za-z]): ([A-Za-z]+)$'),
+    );
+    if (!groups) throw new Error(`${element} is not a valid password config`);
+    const [_, start, end, letter, password] = groups;
     return {
-      start: Number(startString),
-      end: Number(endString),
+      start: +start,
+      end: +end,
       letter,
       password,
     };
   });
 };
 
-// 🤢 but works
 export const parsePassports = (input: string): Passport[] => {
-  const inputArray = input.split('\n\n');
-  const trimmed = inputArray.map((e) => e.trim());
-  return trimmed.map((e) => {
-    const passportRows = e.split('\n');
-    const trimmedPassportRows = passportRows.map((e) => e.trim());
-    const keyValues = trimmedPassportRows.reduce(
+  const parsed = parseLines(input, '\n\n');
+  return parsed.map((element) => {
+    const passportRows = parseLines(element, '\n');
+    const keyValues = passportRows.reduce(
       (acc: string[], row) => [...acc, ...row.split(' ')],
       [],
     );
