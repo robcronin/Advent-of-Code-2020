@@ -15,12 +15,15 @@ export const day$1part2 = (input: number[]) => {
 " >> src/day$1/day$1.ts
 
 echo "import { logAnswer } from '../utils/logging';
+import { parseInput } from '../utils/input';
 import { day$1, day$1part2 } from './day$1';
 import { data } from './day$1.data';
 
+const testString = '';
+const testData = parseInput(testString);
+
 describe('day $1', () => {
   it('test cases', () => {
-    const testData = [];
     expect(day$1(testData)).toBe($1);
   });
 
@@ -34,7 +37,6 @@ describe('day $1', () => {
 
 describe('day $1 part 2', () => {
   it('test cases', () => {
-    const testData = [];
     expect(day$1part2(testData)).toBe($1);
   });
 
