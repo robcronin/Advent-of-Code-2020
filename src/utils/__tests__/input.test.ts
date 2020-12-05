@@ -29,30 +29,39 @@ test('Returns an array if no delimiter present', () => {
   expect(parseInput(input)).toStrictEqual([2, 2, 2, 2, 2]);
 });
 
-test('parsePasswordConfigs', () => {
-  const input = `1-3 a: abcde
-  1-3 b: cdefg
-  2-9 c: ccccccccc`;
-  expect(parsePasswordConfigs(input)).toEqual([
-    {
-      start: 1,
-      end: 3,
-      letter: 'a',
-      password: 'abcde',
-    },
-    {
-      start: 1,
-      end: 3,
-      letter: 'b',
-      password: 'cdefg',
-    },
-    {
-      start: 2,
-      end: 9,
-      letter: 'c',
-      password: 'ccccccccc',
-    },
-  ]);
+describe('parsePasswordConfigs', () => {
+  it('should parse valid configs', () => {
+    const input = `1-3 a: abcde
+      1-3 b: cdefg
+      2-9 c: ccccccccc`;
+    expect(parsePasswordConfigs(input)).toEqual([
+      {
+        start: 1,
+        end: 3,
+        letter: 'a',
+        password: 'abcde',
+      },
+      {
+        start: 1,
+        end: 3,
+        letter: 'b',
+        password: 'cdefg',
+      },
+      {
+        start: 2,
+        end: 9,
+        letter: 'c',
+        password: 'ccccccccc',
+      },
+    ]);
+  });
+  it('should throw an error for invalid config', () => {
+    const input = `1-3 a:: abcde
+      1-3 b: cdefg`;
+    expect(() => {
+      parsePasswordConfigs(input);
+    }).toThrowError('1-3 a:: abcde is not a valid password config');
+  });
 });
 
 test('parsePassports', () => {
