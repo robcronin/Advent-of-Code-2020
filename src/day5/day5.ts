@@ -4,9 +4,9 @@ import { getSeatNum } from '../utils/plane';
 export const day5 = (seatConfigs: string[]) =>
   getMaxInArrayByFormula(seatConfigs, getSeatNum);
 
-export const day5part2 = (input: string[]) => {
+export const day5part2 = (seatConfigs: string[]) => {
   let result;
-  input
+  seatConfigs
     .map(getSeatNum)
     .sort((a, b) => a - b)
     .some((seatNum, index, orderedSeats) => {
