@@ -1,11 +1,8 @@
+import { getMaxInArrayByFormula } from '../utils/array';
 import { getSeatNum } from '../utils/plane';
 
-export const day5 = (input: string[]) => {
-  return input.reduce((result, seatConfig) => {
-    const seatNum = getSeatNum(seatConfig);
-    return seatNum > result ? seatNum : result;
-  }, 0);
-};
+export const day5 = (seatConfigs: string[]) =>
+  getMaxInArrayByFormula(seatConfigs, getSeatNum);
 
 export const day5part2 = (input: string[]) => {
   let result;
