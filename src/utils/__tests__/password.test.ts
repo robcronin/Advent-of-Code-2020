@@ -1,9 +1,4 @@
-import { parsePasswordConfigs } from '../input';
-import {
-  countValidPasswords,
-  isValidOldPolicy,
-  isValidPolicy,
-} from '../password';
+import { isValidOldPolicy, isValidPolicy } from '../password';
 
 describe('isValidOldPolicy', () => {
   it('is valid at start limit', () => {
@@ -78,16 +73,5 @@ describe('isValidPolicy', () => {
         password: 'aaaccaa',
       }),
     ).toBe(false);
-  });
-});
-
-describe('countValidPasswords', () => {
-  it('is valid for letter at first position', () => {
-    const testString = `1-3 a: abcde
-    1-3 b: cdefg
-    2-9 c: ccccccccc`;
-
-    const testInput = parsePasswordConfigs(testString);
-    expect(countValidPasswords(testInput, isValidOldPolicy)).toBe(2);
   });
 });

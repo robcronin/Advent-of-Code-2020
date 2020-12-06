@@ -1,14 +1,9 @@
+import { countArrayByCondition } from '../utils/count';
 import { PasswordConfig } from '../utils/input';
-import {
-  countValidPasswords,
-  isValidOldPolicy,
-  isValidPolicy,
-} from '../utils/password';
+import { isValidOldPolicy, isValidPolicy } from '../utils/password';
 
-export const day2 = (input: PasswordConfig[]) => {
-  return countValidPasswords(input, isValidOldPolicy);
-};
+export const day2 = (passwordConfigs: PasswordConfig[]) =>
+  countArrayByCondition(passwordConfigs, isValidOldPolicy);
 
-export const day2part2 = (input: PasswordConfig[]) => {
-  return countValidPasswords(input, isValidPolicy);
-};
+export const day2part2 = (passwordConfigs: PasswordConfig[]) =>
+  countArrayByCondition(passwordConfigs, isValidPolicy);

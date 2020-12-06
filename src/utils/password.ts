@@ -1,4 +1,4 @@
-import { countArrayByCondition, countOccurences } from './count';
+import { countOccurences } from './count';
 import { PasswordConfig } from './input';
 
 export const isValidOldPolicy = (passwordConfig: PasswordConfig) => {
@@ -16,8 +16,3 @@ export const isValidPolicy = (passwordConfig: PasswordConfig) => {
   if (count === 1) return true;
   return false;
 };
-
-export const countValidPasswords = (
-  passwordConfigs: PasswordConfig[],
-  policyCheck: (passwordConfig: PasswordConfig) => boolean,
-) => countArrayByCondition(passwordConfigs, policyCheck);
