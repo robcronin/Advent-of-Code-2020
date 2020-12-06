@@ -1,4 +1,4 @@
-import { sumArrayByFormula } from '../utils/count';
+import { sumArrayByFormula } from '../utils/array';
 import {
   countQuestionsWithAllYes,
   countQuestionsWithAtLeastOneYes,

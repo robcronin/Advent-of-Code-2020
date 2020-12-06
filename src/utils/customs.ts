@@ -1,4 +1,4 @@
-import { countArrayByCondition } from './count';
+import { countArrayByCondition } from './array';
 
 export const countQuestionsWithAtLeastOneYes = (
   groupAnswers: string[],

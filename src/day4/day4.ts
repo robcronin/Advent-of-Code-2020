@@ -1,4 +1,4 @@
-import { countArrayByCondition } from '../utils/count';
+import { countArrayByCondition } from '../utils/array';
 import { Passport } from '../utils/input';
 import {
   hasRequiredNorthPoleCredentialsFields,

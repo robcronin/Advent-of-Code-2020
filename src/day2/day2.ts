@@ -1,4 +1,4 @@
-import { countArrayByCondition } from '../utils/count';
+import { countArrayByCondition } from '../utils/array';
 import { PasswordConfig } from '../utils/input';
 import { isValidOldPolicy, isValidPolicy } from '../utils/password';
 
