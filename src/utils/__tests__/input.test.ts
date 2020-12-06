@@ -1,4 +1,9 @@
-import { parseInput, parsePassports, parsePasswordConfigs } from '../input';
+import {
+  parseCustomsGroupAnswers,
+  parseInput,
+  parsePassports,
+  parsePasswordConfigs,
+} from '../input';
 
 test('Parses a newline delimited array of numbers', () => {
   const input = `142195
@@ -115,5 +120,21 @@ test('parsePassports', () => {
       iyr: '2011',
       pid: '166559648',
     },
+  ]);
+});
+
+test('parseCustomsGroupAnswers', () => {
+  const input = `abc
+
+  a
+  b
+  c
+
+  ab
+  ac`;
+  expect(parseCustomsGroupAnswers(input)).toEqual([
+    ['abc'],
+    ['a', 'b', 'c'],
+    ['ab', 'ac'],
   ]);
 });

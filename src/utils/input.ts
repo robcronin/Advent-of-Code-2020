@@ -16,6 +16,8 @@ export interface Passport {
   cid?: string;
 }
 
+export type CustomsGroupAnswers = string[][];
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -76,4 +78,11 @@ export const parsePassports = (input: string): Passport[] => {
       };
     }, {});
   });
+};
+
+export const parseCustomsGroupAnswers = (
+  input: string,
+): CustomsGroupAnswers => {
+  const parsed = parseLines(input, '\n\n');
+  return parsed.map((element) => parseLines(element, '\n'));
 };
