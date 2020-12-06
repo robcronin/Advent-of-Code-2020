@@ -1,3 +1,5 @@
+import { countArrayByCondition } from './count';
+
 export const countQuestionsWithAtLeastOneYes = (
   groupAnswers: string[],
 ): number => {
@@ -23,9 +25,8 @@ export const countQuestionsWithAllYes = (groupAnswers: string[]): number => {
     {},
   );
 
-  const numPeople = groupAnswers.length;
-  return Object.values(yesesPerQuestion).reduce(
-    (result, numAnswers) => result + (numAnswers === numPeople ? 1 : 0),
-    0,
+  return countArrayByCondition(
+    Object.values(yesesPerQuestion),
+    (numYeses) => numYeses === groupAnswers.length,
   );
 };
