@@ -7,7 +7,7 @@ export const day5 = (seatConfigs: string[]) =>
 export const day5part2 = (input: string[]) => {
   let result;
   input
-    .map((seatConfig) => getSeatNum(seatConfig))
+    .map(getSeatNum)
     .sort((a, b) => a - b)
     .some((seatNum, index, orderedSeats) => {
       if (orderedSeats[index + 1] - seatNum !== 1) {
