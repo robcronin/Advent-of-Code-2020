@@ -18,6 +18,17 @@ export interface Passport {
 
 export type CustomsGroupAnswers = string[][];
 
+export interface BagContents {
+  id: string;
+  number: number;
+}
+export interface BagConfig {
+  adjective: string;
+  color: string;
+  id: string;
+  contents: BagContents[];
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -85,4 +96,41 @@ export const parseCustomsGroupAnswers = (
 ): CustomsGroupAnswers => {
   const parsed = parseLines(input, '\n\n');
   return parsed.map((element) => parseLines(element, '\n'));
+};
+
+export const parseBagRules = (input: string): Record<string, BagConfig> => {
+  const parsed = parseLines(input, '\n');
+  return parsed.reduce((acc, element) => {
+    const groups = element.match(
+      new RegExp('^([a-z]+) ([a-z]+) bags contain ((no other bags\\.)|(.*))$'),
+    );
+    if (!groups) throw new Error(`${element}: is not a valid bag config`);
+    const [_, adjective, color, _2, isNone, contentRulesString] = groups;
+
+    const contents: BagContents[] = [];
+    if (!isNone) {
+      const contentRules = parseLines(contentRulesString, ',');
+      contentRules.forEach((rule) => {
+        const ruleGroups = rule.match(
+          new RegExp('^([0-9]+) ([a-z]+) ([a-z]+) .*'),
+        );
+        if (!ruleGroups) throw new Error(`${element}: is not a valid bag rule`);
+        const [_, number, containAdjective, containColor] = ruleGroups;
+        contents.push({
+          id: `${containAdjective}${containColor}`,
+          number: +number,
+        });
+      });
+    }
+    const id = `${adjective}${color}`;
+    return {
+      ...acc,
+      [id]: {
+        adjective,
+        color,
+        id,
+        contents,
+      },
+    };
+  }, {});
 };

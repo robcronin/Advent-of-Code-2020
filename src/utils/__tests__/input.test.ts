@@ -1,4 +1,5 @@
 import {
+  parseBagRules,
   parseCustomsGroupAnswers,
   parseInput,
   parsePassports,
@@ -137,4 +138,64 @@ test('parseCustomsGroupAnswers', () => {
     ['a', 'b', 'c'],
     ['ab', 'ac'],
   ]);
+});
+
+describe('parseBagRules', () => {
+  it('should parse the bag rules', () => {
+    const input = `dark orange bags contain 3 bright white bags, 4 muted yellow bags.
+      bright white bags contain 1 shiny gold bag.
+      faded blue bags contain no other bags.
+      muted plum bags contain 5 posh silver bags, 3 pale turquoise bags, 3 faded chartreuse bags.`;
+    expect(parseBagRules(input)).toEqual({
+      brightwhite: {
+        adjective: 'bright',
+        color: 'white',
+        contents: [{ id: 'shinygold', number: 1 }],
+        id: 'brightwhite',
+      },
+      darkorange: {
+        adjective: 'dark',
+        color: 'orange',
+        contents: [
+          { id: 'brightwhite', number: 3 },
+          { id: 'mutedyellow', number: 4 },
+        ],
+        id: 'darkorange',
+      },
+      fadedblue: {
+        adjective: 'faded',
+        color: 'blue',
+        contents: [],
+        id: 'fadedblue',
+      },
+      mutedplum: {
+        adjective: 'muted',
+        color: 'plum',
+        contents: [
+          { id: 'poshsilver', number: 5 },
+          { id: 'paleturquoise', number: 3 },
+          { id: 'fadedchartreuse', number: 3 },
+        ],
+        id: 'mutedplum',
+      },
+    });
+  });
+  it('should throw an error for a bad config', () => {
+    const input = `dark orange bags contaaain 3 bright white bags, 4 muted yellow bags.
+      bright white bags contain 1 shiny gold bag.`;
+    expect(() => {
+      parseBagRules(input);
+    }).toThrowError(
+      'dark orange bags contaaain 3 bright white bags, 4 muted yellow bags.: is not a valid bag config',
+    );
+  });
+  it('should throw an error for a bad inner config', () => {
+    const input = `dark orange bags contain 3 bright 7 white bags, 4 muted yellow bags.
+      bright white bags contain 1 shiny gold bag.`;
+    expect(() => {
+      parseBagRules(input);
+    }).toThrowError(
+      'dark orange bags contain 3 bright 7 white bags, 4 muted yellow bags.: is not a valid bag rule',
+    );
+  });
 });
