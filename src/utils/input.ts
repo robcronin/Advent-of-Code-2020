@@ -29,6 +29,12 @@ export interface BagConfig {
   contents: BagContents[];
 }
 
+export type GameBootOperation = 'nop' | 'acc' | 'jmp';
+export interface GameBootInstruction {
+  operation: GameBootOperation;
+  argument: number;
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -133,4 +139,20 @@ export const parseBagRules = (input: string): Record<string, BagConfig> => {
       },
     };
   }, {});
+};
+
+export const parseGameBootInstructions = (
+  input: string,
+): GameBootInstruction[] => {
+  const parsed = parseLines(input);
+  return parsed.map((element) => {
+    const groups = element.match(new RegExp('^(nop|acc|jmp) ((\\+|-)[0-9]+)$'));
+    if (!groups)
+      throw new Error(`${element} is not a valid game boot instruction`);
+    const [_, operation, argument] = groups;
+    return {
+      operation: operation as GameBootOperation,
+      argument: +argument,
+    };
+  });
 };

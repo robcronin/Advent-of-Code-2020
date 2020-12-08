@@ -1,6 +1,7 @@
 import {
   parseBagRules,
   parseCustomsGroupAnswers,
+  parseGameBootInstructions,
   parseInput,
   parsePassports,
   parsePasswordConfigs,
@@ -197,5 +198,35 @@ describe('parseBagRules', () => {
     }).toThrowError(
       'dark orange bags contain 3 bright 7 white bags, 4 muted yellow bags.: is not a valid bag rule',
     );
+  });
+});
+
+describe('parseGameBootInstructions', () => {
+  it('should parse valid game boot instructions', () => {
+    const input = `nop +0
+      acc -99
+      jmp +4`;
+    expect(parseGameBootInstructions(input)).toEqual([
+      {
+        operation: 'nop',
+        argument: 0,
+      },
+      {
+        operation: 'acc',
+        argument: -99,
+      },
+      {
+        operation: 'jmp',
+        argument: 4,
+      },
+    ]);
+  });
+  it('should throw an error for a bad game boot instruction', () => {
+    const input = `nop +0
+      bad -99
+      jmp +4`;
+    expect(() => {
+      parseGameBootInstructions(input);
+    }).toThrowError('bad -99 is not a valid game boot instruction');
   });
 });
