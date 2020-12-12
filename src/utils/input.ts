@@ -35,6 +35,12 @@ export interface GameBootInstruction {
   argument: number;
 }
 
+export type ShipNavigationAction = 'N' | 'S' | 'E' | 'W' | 'R' | 'L' | 'F';
+export interface ShipNavigationInstruction {
+  action: ShipNavigationAction;
+  value: number;
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -153,6 +159,23 @@ export const parseGameBootInstructions = (
     return {
       operation: operation as GameBootOperation,
       argument: +argument,
+    };
+  });
+};
+
+export const parseShipNavigationInstructions = (
+  input: string,
+): ShipNavigationInstruction[] => {
+  const parsed = parseLines(input);
+  return parsed.map((element) => {
+    const groups = element.match(
+      new RegExp('^((N|S|E|W|F)([0-9]+))|((L|R)(90|180|270))$'),
+    );
+    if (!groups) throw new Error(`${element} is not a valid ship instruction`);
+    const [_, _movement, direction, value, _turn, leftOrRight, angle] = groups;
+    return {
+      action: (direction || leftOrRight) as ShipNavigationAction,
+      value: +value || +angle,
     };
   });
 };

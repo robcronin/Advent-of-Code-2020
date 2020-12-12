@@ -5,6 +5,7 @@ import {
   parseInput,
   parsePassports,
   parsePasswordConfigs,
+  parseShipNavigationInstructions,
 } from '../input';
 
 test('Parses a newline delimited array of numbers', () => {
@@ -228,5 +229,34 @@ describe('parseGameBootInstructions', () => {
     expect(() => {
       parseGameBootInstructions(input);
     }).toThrowError('bad -99 is not a valid game boot instruction');
+  });
+});
+
+describe('parseShipNavigationInstructions', () => {
+  it('should parse valud ship navigation instructions', () => {
+    const inputString = `F10
+  N3
+  F7
+  R90
+  F11`;
+    expect(parseShipNavigationInstructions(inputString)).toEqual([
+      { action: 'F', value: 10 },
+      { action: 'N', value: 3 },
+      { action: 'F', value: 7 },
+      { action: 'R', value: 90 },
+      { action: 'F', value: 11 },
+    ]);
+  });
+  it('should throw an error for an invalid instruction', () => {
+    expect(() =>
+      parseShipNavigationInstructions(`F10
+      Na`),
+    ).toThrowError('Na is not a valid ship instruction');
+  });
+  it('should throw an error for an invalid turn angle', () => {
+    expect(() =>
+      parseShipNavigationInstructions(`F10
+      R60`),
+    ).toThrowError('R60 is not a valid ship instruction');
   });
 });
