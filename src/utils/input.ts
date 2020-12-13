@@ -41,6 +41,11 @@ export interface ShipNavigationInstruction {
   value: number;
 }
 
+export interface BusSchedule {
+  earliestDepart: number;
+  busIds: string[];
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -178,4 +183,12 @@ export const parseShipNavigationInstructions = (
       value: +value || +angle,
     };
   });
+};
+
+export const parseBusSchedule = (input: string): BusSchedule => {
+  const parsed = parseLines(input, '\n');
+  const earliestDepart = +parsed[0];
+  const busIdInput = parsed[1];
+  const parsedBusIds = parseLines(busIdInput, ',');
+  return { earliestDepart, busIds: parsedBusIds };
 };

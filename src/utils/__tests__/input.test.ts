@@ -1,5 +1,6 @@
 import {
   parseBagRules,
+  parseBusSchedule,
   parseCustomsGroupAnswers,
   parseGameBootInstructions,
   parseInput,
@@ -235,10 +236,10 @@ describe('parseGameBootInstructions', () => {
 describe('parseShipNavigationInstructions', () => {
   it('should parse valud ship navigation instructions', () => {
     const inputString = `F10
-  N3
-  F7
-  R90
-  F11`;
+      N3
+      F7
+      R90
+      F11`;
     expect(parseShipNavigationInstructions(inputString)).toEqual([
       { action: 'F', value: 10 },
       { action: 'N', value: 3 },
@@ -258,5 +259,14 @@ describe('parseShipNavigationInstructions', () => {
       parseShipNavigationInstructions(`F10
       R60`),
     ).toThrowError('R60 is not a valid ship instruction');
+  });
+});
+
+test('parseBusSchedule', () => {
+  const inputString = `939
+    7,13,x,x,59,x,31,19`;
+  expect(parseBusSchedule(inputString)).toEqual({
+    earliestDepart: 939,
+    busIds: ['7', '13', 'x', 'x', '59', 'x', '31', '19'],
   });
 });
