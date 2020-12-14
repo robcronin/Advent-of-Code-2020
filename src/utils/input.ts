@@ -46,6 +46,18 @@ export interface BusSchedule {
   busIds: string[];
 }
 
+export type DockingInstruction =
+  | {
+      mask: string;
+      memAddress: undefined;
+      memValue: undefined;
+    }
+  | {
+      mask: undefined;
+      memAddress: number;
+      memValue: number;
+    };
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -191,4 +203,21 @@ export const parseBusSchedule = (input: string): BusSchedule => {
   const busIdInput = parsed[1];
   const parsedBusIds = parseLines(busIdInput, ',');
   return { earliestDepart, busIds: parsedBusIds };
+};
+
+export const parseDockingInstructions = (
+  input: string,
+): DockingInstruction[] => {
+  const parsed = parseLines(input, '\n');
+  return parsed.map((element) => {
+    const groups = element.match(
+      new RegExp('^((mask)|(mem\\[([0-9]+)\\])) = ([X0-9]+)'),
+    );
+    if (!groups)
+      throw new Error(`${element} is not a valid docking instruction`);
+    const [_, _lhs, isMask, _mem, memAddress, value] = groups;
+
+    if (isMask) return { mask: value };
+    return { memAddress: +memAddress, memValue: +value };
+  });
 };

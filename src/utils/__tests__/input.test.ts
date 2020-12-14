@@ -2,6 +2,7 @@ import {
   parseBagRules,
   parseBusSchedule,
   parseCustomsGroupAnswers,
+  parseDockingInstructions,
   parseGameBootInstructions,
   parseInput,
   parsePassports,
@@ -268,5 +269,41 @@ test('parseBusSchedule', () => {
   expect(parseBusSchedule(inputString)).toEqual({
     earliestDepart: 939,
     busIds: ['7', '13', 'x', 'x', '59', 'x', '31', '19'],
+  });
+});
+
+describe('parseDockingInstructions', () => {
+  it('should parse correctly', () => {
+    const inputString = `mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
+    mem[8] = 11
+    mem[7] = 101
+    mem[8] = 0`;
+    expect(parseDockingInstructions(inputString)).toEqual([
+      {
+        mask: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X',
+      },
+      {
+        memAddress: 8,
+        memValue: 11,
+      },
+      {
+        memAddress: 7,
+        memValue: 101,
+      },
+      {
+        memAddress: 8,
+        memValue: 0,
+      },
+    ]);
+  });
+
+  it('should throw error if invalie ', () => {
+    const inputString = `mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
+    mem[a] = 11
+    mem[7] = 101
+    mem[8] = 0`;
+    expect(() => parseDockingInstructions(inputString)).toThrowError(
+      'mem[a] = 11 is not a valid docking instruction',
+    );
   });
 });
