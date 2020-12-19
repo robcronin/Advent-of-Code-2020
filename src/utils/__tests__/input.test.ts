@@ -8,6 +8,7 @@ import {
   parsePassports,
   parsePasswordConfigs,
   parseShipNavigationInstructions,
+  parseTicketInfo,
 } from '../input';
 
 test('Parses a newline delimited array of numbers', () => {
@@ -304,6 +305,72 @@ describe('parseDockingInstructions', () => {
     mem[8] = 0`;
     expect(() => parseDockingInstructions(inputString)).toThrowError(
       'mem[a] = 11 is not a valid docking instruction',
+    );
+  });
+});
+
+describe('parseTicketInfo', () => {
+  it('should parse ticket info', () => {
+    const testString = `class: 1-3 or 5-7
+      row: 6-11 or 33-44
+      seat num: 13-40 or 45-50
+
+      your ticket:
+      7,1,14
+
+      nearby tickets:
+      7,3,47
+      40,4,50
+      55,2,20
+      38,6,12`;
+    expect(parseTicketInfo(testString)).toEqual({
+      fields: [
+        {
+          key: 'class',
+          low1: 1,
+          high1: 3,
+          low2: 5,
+          high2: 7,
+        },
+        {
+          key: 'row',
+          low1: 6,
+          high1: 11,
+          low2: 33,
+          high2: 44,
+        },
+        {
+          key: 'seat num',
+          low1: 13,
+          high1: 40,
+          low2: 45,
+          high2: 50,
+        },
+      ],
+      myTicket: [7, 1, 14],
+      nearbyTickets: [
+        [7, 3, 47],
+        [40, 4, 50],
+        [55, 2, 20],
+        [38, 6, 12],
+      ],
+    });
+  });
+  it('should throw error if invalid field', () => {
+    const testString = `class: 1-3 or 5-7
+      row: 6-11 or3-44
+      seat num: 13-40 or 45-50
+
+      your ticket:
+      7,1,14
+
+      nearby tickets:
+      7,3,47
+      40,4,50
+      55,2,20
+      38,6,12`;
+    expect(() => parseTicketInfo(testString)).toThrowError(
+      'row: 6-11 or3-44 is not a valid field info',
     );
   });
 });

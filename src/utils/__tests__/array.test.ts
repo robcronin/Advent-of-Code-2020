@@ -1,6 +1,7 @@
 import {
   countArrayByCondition,
   getMaxInArrayByFormula,
+  multArrayByFormula,
   sumArrayByFormula,
 } from '../array';
 
@@ -18,6 +19,23 @@ describe('sumArrayByFormula', () => {
         (element) => element.length * element.width,
       ),
     ).toBe(38);
+  });
+});
+
+describe('multArrayByFormula', () => {
+  it('should sum with identity formula', () => {
+    expect(multArrayByFormula([10, 2, 3], (element) => element)).toBe(60);
+  });
+  it('should sum on object', () => {
+    expect(
+      multArrayByFormula(
+        [
+          { length: 3, width: 6 },
+          { length: 2, width: 10 },
+        ],
+        (element) => element.length * element.width,
+      ),
+    ).toBe(360);
   });
 });
 

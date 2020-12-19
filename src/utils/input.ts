@@ -58,6 +58,21 @@ export type DockingInstruction =
       memValue: number;
     };
 
+export interface TicketFieldInfo {
+  key: string;
+  low1: number;
+  high1: number;
+  low2: number;
+  high2: number;
+}
+
+export type Ticket = number[];
+export interface TicketInfo {
+  fields: TicketFieldInfo[];
+  myTicket: Ticket;
+  nearbyTickets: Ticket[];
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -220,4 +235,36 @@ export const parseDockingInstructions = (
     if (isMask) return { mask: value };
     return { memAddress: +memAddress, memValue: +value };
   });
+};
+
+export const parseTicketInfo = (input: string): TicketInfo => {
+  const [fieldsInfoString, myTicketString, nearbyTicketString] = parseLines(
+    input,
+    '\n\n',
+  );
+
+  const parsedFieldsInfo = parseLines(fieldsInfoString, '\n');
+  const fields = parsedFieldsInfo.map((fieldInfo) => {
+    const groups = fieldInfo.match(
+      new RegExp('^([a-z ]+): ([0-9]+)-([0-9]+) or ([0-9]+)-([0-9]+)$'),
+    );
+    if (!groups) throw new Error(`${fieldInfo} is not a valid field info`);
+    const [_, key, low1, high1, low2, high2] = groups;
+    return {
+      key,
+      low1: +low1,
+      high1: +high1,
+      low2: +low2,
+      high2: +high2,
+    };
+  });
+
+  const parsedMyTicket = parseLines(myTicketString, '\n');
+  const myTicket = parseInput(parsedMyTicket[1]) as number[];
+
+  const parsedNearbyTickets = parseLines(nearbyTicketString, '\n');
+  const nearbyTickets = parsedNearbyTickets
+    .slice(1)
+    .map((nearbyTicketString) => parseInput(nearbyTicketString) as number[]);
+  return { fields, myTicket, nearbyTickets };
 };
