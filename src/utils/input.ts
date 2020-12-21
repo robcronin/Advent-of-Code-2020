@@ -73,6 +73,14 @@ export interface TicketInfo {
   nearbyTickets: Ticket[];
 }
 
+export type SatelliteRule =
+  | { pattern: string; subRules: undefined }
+  | { pattern: undefined; subRules: number[][] };
+export interface SatelliteResponse {
+  rules: Record<number, SatelliteRule>;
+  messages: string[];
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -267,4 +275,33 @@ export const parseTicketInfo = (input: string): TicketInfo => {
     .slice(1)
     .map((nearbyTicketString) => parseInput(nearbyTicketString) as number[]);
   return { fields, myTicket, nearbyTickets };
+};
+
+export const parseSatelliteResponse = (input: string): SatelliteResponse => {
+  const [rulesString, messagesString] = parseLines(input, '\n\n');
+  const parsedRules = parseLines(rulesString, '\n');
+  const rules = parsedRules.reduce((acc, parsedRule) => {
+    const groups = parsedRule.match(
+      new RegExp('^([0-9]+): (("([a-z])")|([0-9 ]+)|([0-9 \\|]+))$'),
+    );
+    if (!groups) throw new Error(`${parsedRule} is not a valid satellite rule`);
+    const [_, ruleNum, subRule, _a, pattern] = groups;
+    if (pattern) {
+      return { ...acc, [ruleNum]: { pattern, subRules: undefined } };
+    } else {
+      const subRuleGroups = subRule.split('|');
+      const subRules = subRuleGroups.map((subRuleGroup) =>
+        subRuleGroup
+          .split(' ')
+          .filter((el) => el !== '')
+          .map((el) => +el),
+      );
+      return {
+        ...acc,
+        [ruleNum]: { pattern: undefined, subRules },
+      };
+    }
+  }, {});
+  const messages = parseLines(messagesString, '\n');
+  return { rules, messages };
 };

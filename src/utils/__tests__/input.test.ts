@@ -7,6 +7,7 @@ import {
   parseInput,
   parsePassports,
   parsePasswordConfigs,
+  parseSatelliteResponse,
   parseShipNavigationInstructions,
   parseTicketInfo,
 } from '../input';
@@ -371,6 +372,54 @@ describe('parseTicketInfo', () => {
       38,6,12`;
     expect(() => parseTicketInfo(testString)).toThrowError(
       'row: 6-11 or3-44 is not a valid field info',
+    );
+  });
+});
+
+describe('parseSatelliteResponse', () => {
+  it('should parse satellite response', () => {
+    const testString = `0: 4 1 5
+    1: 1 2 | 8 9
+    2: 12
+    5: "b"
+
+    aaabbb
+    aaaabbb`;
+    expect(parseSatelliteResponse(testString)).toEqual({
+      rules: {
+        0: {
+          pattern: undefined,
+          subRules: [[4, 1, 5]],
+        },
+        1: {
+          pattern: undefined,
+          subRules: [
+            [1, 2],
+            [8, 9],
+          ],
+        },
+        2: {
+          pattern: undefined,
+          subRules: [[12]],
+        },
+        5: {
+          pattern: 'b',
+          subRules: undefined,
+        },
+      },
+      messages: ['aaabbb', 'aaaabbb'],
+    });
+  });
+  it('should throw error if invalid rule in satellite response', () => {
+    const testString = `0: 4 1 5
+    1: 1 2 | a8 9
+    2: 12
+    5: "b"
+
+    aaabbb
+    aaaabbb`;
+    expect(() => parseSatelliteResponse(testString)).toThrowError(
+      '1: 1 2 | a8 9 is not a valid satellite rule',
     );
   });
 });
