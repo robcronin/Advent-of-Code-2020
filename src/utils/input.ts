@@ -81,6 +81,16 @@ export interface SatelliteResponse {
   messages: string[];
 }
 
+export interface SatelliteImage {
+  id: number;
+  image: string[];
+  borders: [string, string, string, string];
+  top: string;
+  right: string;
+  bottom: string;
+  left: string;
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -304,4 +314,40 @@ export const parseSatelliteResponse = (input: string): SatelliteResponse => {
   }, {});
   const messages = parseLines(messagesString, '\n');
   return { rules, messages };
+};
+
+export const parseSatelliteImages = (
+  input: string,
+): Record<number, SatelliteImage> => {
+  const parsedImages = parseLines(input, '\n\n');
+  return parsedImages.reduce((acc, parsedImage) => {
+    const [idLine, ...image] = parseLines(parsedImage, '\n');
+    const idGroups = idLine.match(new RegExp('^Tile ([0-9]+):$'));
+    if (!idGroups) throw new Error(`${idLine} is not a valid tile id`);
+    const [_, id] = idGroups;
+    const { left, right } = image.reduce(
+      (acc, row) => {
+        return {
+          left: acc.left + row[0],
+          right: acc.right + row[row.length - 1],
+        };
+      },
+      {
+        left: '',
+        right: '',
+      },
+    );
+    return {
+      ...acc,
+      [id]: {
+        id: +id,
+        image,
+        borders: [image[0], right, image[image.length - 1], left],
+        top: image[0],
+        right,
+        bottom: image[image.length - 1],
+        left,
+      },
+    };
+  }, {});
 };

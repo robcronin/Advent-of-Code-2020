@@ -7,6 +7,7 @@ import {
   parseInput,
   parsePassports,
   parsePasswordConfigs,
+  parseSatelliteImages,
   parseSatelliteResponse,
   parseShipNavigationInstructions,
   parseTicketInfo,
@@ -420,6 +421,89 @@ describe('parseSatelliteResponse', () => {
     aaaabbb`;
     expect(() => parseSatelliteResponse(testString)).toThrowError(
       '1: 1 2 | a8 9 is not a valid satellite rule',
+    );
+  });
+});
+
+describe('parseSatelliteImages', () => {
+  it('should parse the satellite images', () => {
+    const testString = `Tile 2311:
+    ..##.#..#.
+    ##..#.....
+    #...##..#.
+    ####.#...#
+    ##.##.###.
+    ##...#.###
+    .#.#.#..##
+    ..#....#..
+    ###...#.#.
+    ..###..###
+
+    Tile 1951:
+    #.##...##.
+    #.####...#
+    .....#..##
+    #...######
+    .##.#....#
+    .###.#####
+    ###.##.##.
+    .###....#.
+    ..#.#..#.#
+    #...##.#..
+    `;
+    expect(parseSatelliteImages(testString)).toEqual({
+      2311: {
+        id: 2311,
+        image: [
+          '..##.#..#.',
+          '##..#.....',
+          '#...##..#.',
+          '####.#...#',
+          '##.##.###.',
+          '##...#.###',
+          '.#.#.#..##',
+          '..#....#..',
+          '###...#.#.',
+          '..###..###',
+        ],
+        borders: ['..##.#..#.', '...#.##..#', '..###..###', '.#####..#.'],
+        top: '..##.#..#.',
+        right: '...#.##..#',
+        bottom: '..###..###',
+        left: '.#####..#.',
+      },
+      1951: {
+        id: 1951,
+        image: [
+          '#.##...##.',
+          '#.####...#',
+          '.....#..##',
+          '#...######',
+          '.##.#....#',
+          '.###.#####',
+          '###.##.##.',
+          '.###....#.',
+          '..#.#..#.#',
+          '#...##.#..',
+        ],
+        borders: ['#.##...##.', '.#####..#.', '#...##.#..', '##.#..#..#'],
+        top: '#.##...##.',
+        right: '.#####..#.',
+        bottom: '#...##.#..',
+        left: '##.#..#..#',
+      },
+    });
+  });
+  it('should throw error if invalid tile id', () => {
+    const testString = `Tile 2311:
+    ..##.#..#.
+    ..###..###
+
+    Tile a1951:
+    #.##...##.
+    #.####...#`;
+    expect(() => parseSatelliteImages(testString)).toThrowError(
+      'Tile a1951: is not a valid tile id',
     );
   });
 });
