@@ -3,6 +3,7 @@ import {
   parseBusSchedule,
   parseCustomsGroupAnswers,
   parseDockingInstructions,
+  parseFoodList,
   parseGameBootInstructions,
   parseInput,
   parsePassports,
@@ -504,6 +505,30 @@ describe('parseSatelliteImages', () => {
     #.####...#`;
     expect(() => parseSatelliteImages(testString)).toThrowError(
       'Tile a1951: is not a valid tile id',
+    );
+  });
+});
+
+describe('parseFoodList', () => {
+  it('should parse ingredients and allergens', () => {
+    const testString = `mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
+    trh fvjkl sbzzf mxmxvkd (contains dairy)`;
+    expect(parseFoodList(testString)).toEqual([
+      {
+        ingredients: ['mxmxvkd', 'kfcds', 'sqjhc', 'nhms'],
+        allergens: ['dairy', 'fish'],
+      },
+      {
+        ingredients: ['trh', 'fvjkl', 'sbzzf', 'mxmxvkd'],
+        allergens: ['dairy'],
+      },
+    ]);
+  });
+  it('should throw error for invalid ingredients and allergens', () => {
+    const testString = `mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
+    trh fvjkl sbzzf mxmxvkd`;
+    expect(() => parseFoodList(testString)).toThrowError(
+      'trh fvjkl sbzzf mxmxvkd is not a valid ingredient and allergen line',
     );
   });
 });

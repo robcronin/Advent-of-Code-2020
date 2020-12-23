@@ -91,6 +91,11 @@ export interface SatelliteImage {
   left: string;
 }
 
+export interface Ingredients {
+  ingredients: string[];
+  allergens: string[];
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -350,4 +355,19 @@ export const parseSatelliteImages = (
       },
     };
   }, {});
+};
+
+export const parseFoodList = (input: string): Ingredients[] => {
+  const parsed = parseLines(input, '\n');
+  return parsed.map((line) => {
+    const groups = line.match(
+      new RegExp('^([a-z ]+) \\(contains ([a-z, ]+)\\)$'),
+    );
+    if (!groups)
+      throw new Error(`${line} is not a valid ingredient and allergen line`);
+    const [_, ingredientString, allergenString] = groups;
+    const ingredients = parseLines(ingredientString, ' ');
+    const allergens = parseLines(allergenString, ', ');
+    return { ingredients, allergens };
+  });
 };
