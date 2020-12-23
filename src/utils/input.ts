@@ -96,6 +96,11 @@ export interface Ingredients {
   allergens: string[];
 }
 
+export interface StartingHands {
+  player1: number[];
+  player2: number[];
+}
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -370,4 +375,12 @@ export const parseFoodList = (input: string): Ingredients[] => {
     const allergens = parseLines(allergenString, ', ');
     return { ingredients, allergens };
   });
+};
+
+export const parseStartingHands = (input: string): StartingHands => {
+  const handStrings = parseLines(input, '\n\n');
+  const hands = handStrings.map((handString) => parseLines(handString, '\n'));
+  const player1 = hands[0].slice(1).map((card) => +card);
+  const player2 = hands[1].slice(1).map((card) => +card);
+  return { player1, player2 };
 };

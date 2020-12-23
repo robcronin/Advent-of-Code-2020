@@ -22,3 +22,8 @@ export const getMaxInArrayByFormula = <T>(
     const value = formula(element);
     return value > result ? value : result;
   }, formula(array[0]));
+
+export const isArrayInArray = (small: number[], big: number[][]): boolean =>
+  big.some((potentialMatch) =>
+    potentialMatch.every((val, index) => small[index] === val),
+  );

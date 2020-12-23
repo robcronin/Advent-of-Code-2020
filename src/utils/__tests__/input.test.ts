@@ -11,6 +11,7 @@ import {
   parseSatelliteImages,
   parseSatelliteResponse,
   parseShipNavigationInstructions,
+  parseStartingHands,
   parseTicketInfo,
 } from '../input';
 
@@ -530,5 +531,27 @@ describe('parseFoodList', () => {
     expect(() => parseFoodList(testString)).toThrowError(
       'trh fvjkl sbzzf mxmxvkd is not a valid ingredient and allergen line',
     );
+  });
+});
+
+describe('parseStartingHands', () => {
+  const testString = `Player 1:
+  9
+  2
+  6
+  3
+  1
+
+  Player 2:
+  5
+  8
+  4
+  7
+  10`;
+  it('should parse the starting hands', () => {
+    expect(parseStartingHands(testString)).toEqual({
+      player1: [9, 2, 6, 3, 1],
+      player2: [5, 8, 4, 7, 10],
+    });
   });
 });

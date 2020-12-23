@@ -1,6 +1,7 @@
 import {
   countArrayByCondition,
   getMaxInArrayByFormula,
+  isArrayInArray,
   multArrayByFormula,
   sumArrayByFormula,
 } from '../array';
@@ -73,5 +74,18 @@ describe('getMaxInArrayByFormula', () => {
         (element) => element.width * element.length,
       ),
     ).toBe(20);
+  });
+});
+describe('isArrayInArray', () => {
+  const big = [
+    [1, 2],
+    [3, 4],
+    [5, 6],
+  ];
+  it('should return true if it is in array', () => {
+    expect(isArrayInArray([3, 4], big)).toBe(true);
+  });
+  it('should return false if it is not in array', () => {
+    expect(isArrayInArray([2, 1], big)).toBe(false);
   });
 });
