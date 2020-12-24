@@ -11,6 +11,7 @@ import {
   parseSatelliteImages,
   parseSatelliteResponse,
   parseShipNavigationInstructions,
+  parseStartingCups,
   parseStartingHands,
   parseTicketInfo,
 } from '../input';
@@ -553,5 +554,11 @@ describe('parseStartingHands', () => {
       player1: [9, 2, 6, 3, 1],
       player2: [5, 8, 4, 7, 10],
     });
+  });
+});
+
+describe('parseStartingCups', () => {
+  it('should parse the starting cups', () => {
+    expect(parseStartingCups('12345')).toEqual([1, 2, 3, 4, 5]);
   });
 });

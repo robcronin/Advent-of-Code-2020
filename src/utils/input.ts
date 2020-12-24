@@ -384,3 +384,6 @@ export const parseStartingHands = (input: string): StartingHands => {
   const player2 = hands[1].slice(1).map((card) => +card);
   return { player1, player2 };
 };
+
+export const parseStartingCups = (input: string): number[] =>
+  [...input].map((num) => +num);
