@@ -106,4 +106,16 @@ describe('splice', () => {
     expect(list.end).toEqual({ next: null, value: 2 });
     expect(list.head).toEqual({ next: node3, value: 1 });
   });
+  it('should add an array at the bottom', () => {
+    const list = new LinkedList();
+    list.push(1);
+    list.push(2);
+    const node2 = list.findNode(2) as LinkNode;
+    list.splice(node2, 0, [3, 4]);
+
+    expect(list.convertToArray()).toEqual([1, 2, 3, 4]);
+    expect(list.length).toEqual(4);
+    expect(list.end).toEqual({ next: null, value: 4 });
+    expect(list.head).toEqual({ next: node2, value: 1 });
+  });
 });

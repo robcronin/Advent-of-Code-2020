@@ -11,7 +11,7 @@ export class LinkedList {
   head: LinkNode | null;
   end: LinkNode | null;
   length: number;
-  constructor(head = null) {
+  constructor(head: LinkNode | null = null) {
     this.head = head;
     this.end = head;
     this.length = head ? 1 : 0;
@@ -88,6 +88,7 @@ export class LinkedList {
   splice(node: LinkNode, numToDelete: number, newValues: number[]): void {
     if (numToDelete !== 0)
       throw new Error('Not implemented deleting while splicing');
+    if (!node) throw new Error('Passing undefined node to splice');
     const newList = new LinkedList();
     const oldEnd = node.next;
     newList.createFromArray(newValues);

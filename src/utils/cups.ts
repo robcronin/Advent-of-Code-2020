@@ -1,34 +1,42 @@
-export const playCupRound = (cups: number[]): number[] => {
-  const totalCups = cups.length;
-  let currentCup = cups.shift() as number;
-  let movingCups = [cups.shift(), cups.shift(), cups.shift()] as number[];
+import { LinkedList, LinkNode } from './linkedList';
+
+export const playCupRound = (cupsList: LinkedList): void => {
+  const totalCups = cupsList.length;
+  let currentCup = cupsList.shift() as number;
+  let movingCups = [
+    cupsList.shift(),
+    cupsList.shift(),
+    cupsList.shift(),
+  ] as number[];
 
   let destinationCup = currentCup - 1 === 0 ? totalCups : currentCup - 1;
-  while (movingCups.includes(destinationCup)) {
+  while (movingCups.includes(destinationCup) || currentCup === destinationCup) {
     destinationCup = (destinationCup - 1 + totalCups) % totalCups;
     if (destinationCup === 0) {
       destinationCup = totalCups;
     }
   }
-  const destinationCupIndex = cups.indexOf(destinationCup);
-  cups.splice(destinationCupIndex + 1, 0, ...movingCups);
-  cups.push(currentCup);
-  return cups;
+  const destinationCupNode = cupsList.findNode(destinationCup);
+  if (!destinationCupNode) {
+    console.log(movingCups, currentCup);
+    throw new Error(`No node found for value: ${destinationCup}`);
+  }
+  cupsList.splice(destinationCupNode, 0, movingCups);
+  cupsList.push(currentCup);
 };
 
 export const playNumCupRounds = (
-  startingCups: number[],
+  cupsList: LinkedList,
   numRounds: number,
-): number[] => {
-  let cups = startingCups;
+): void => {
   for (let i = 0; i < numRounds; i++) {
-    cups = playCupRound(cups);
+    playCupRound(cupsList);
   }
-  return cups;
 };
 
-export const getCupsAfter1 = (cups: number[]): number => {
+export const getCupsAfter1 = (cupsList: LinkedList): number => {
   let result = '';
+  const cups = cupsList.convertToArray();
   const totalCups = cups.length;
   let index = (cups.indexOf(1) + 1) % totalCups;
   for (let iter = 0; iter < totalCups - 1; iter++) {
@@ -47,12 +55,11 @@ export const generateExtraCups = (cups: number[], totalCups: number) => {
 };
 
 export const findProductNextTwoCups = (
-  cups: number[],
+  cupsList: LinkedList,
   targetCup: number,
 ): number => {
-  const index = cups.indexOf(targetCup);
-  const totalCups = cups.length;
-  const cup1 = cups[(index + 1) % totalCups];
-  const cup2 = cups[(index + 2) % totalCups];
+  const targetNode = cupsList.findNode(targetCup) as LinkNode;
+  const cup1 = targetNode.next?.value;
+  const cup2 = targetNode.next?.next.value;
   return cup1 * cup2;
 };

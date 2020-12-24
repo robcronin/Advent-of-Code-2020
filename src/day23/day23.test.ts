@@ -6,13 +6,16 @@ import { data } from './day23.data';
 const testString = '389125467';
 const testData = parseStartingCups(testString);
 
-describe('day 23', () => {
+describe.only('day 23', () => {
+  it.skip('small test cases', () => {
+    expect(day23(testData, 10)).toBe(92658374);
+  });
   it('test cases', () => {
-    expect(day23(testData)).toBe(67384529);
+    expect(day23(testData, 100)).toBe(67384529);
   });
 
   it('answer', () => {
-    const answer = day23(data);
+    const answer = day23(data, 100);
     logAnswer(answer, 23, 1);
     expect(typeof answer).toBe('number');
     expect(answer).toBe(39564287);
