@@ -1,8 +1,8 @@
 export const playCupRound = (cups: number[]): number[] => {
   const totalCups = cups.length;
-  let currentCup = cups[0];
-  let movingCups = cups.slice(1, 4);
-  let remainingCups = cups.slice(4);
+  let currentCup = cups.shift() as number;
+  let movingCups = [cups.shift(), cups.shift(), cups.shift()] as number[];
+
   let destinationCup = currentCup - 1 === 0 ? totalCups : currentCup - 1;
   while (movingCups.includes(destinationCup)) {
     destinationCup = (destinationCup - 1 + totalCups) % totalCups;
@@ -10,9 +10,10 @@ export const playCupRound = (cups: number[]): number[] => {
       destinationCup = totalCups;
     }
   }
-  const destinationCupIndex = remainingCups.indexOf(destinationCup);
-  remainingCups.splice(destinationCupIndex + 1, 0, ...movingCups);
-  return remainingCups.concat(currentCup);
+  const destinationCupIndex = cups.indexOf(destinationCup);
+  cups.splice(destinationCupIndex + 1, 0, ...movingCups);
+  cups.push(currentCup);
+  return cups;
 };
 
 export const playNumCupRounds = (
