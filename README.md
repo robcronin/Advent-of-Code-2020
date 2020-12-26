@@ -2,8 +2,8 @@
 
 Attempt at [Advent Of Code 2020](https://adventofcode.com/2020) written in Typescript with the following aims:
 
-- 100% test coverage
-- Refactored and Reusable Code
+- 100% test coverage ✅
+- Refactored and Reusable Code (✅ mostly - day 20 not so much 🤪)
 
 ![progress](./progress.png)
 
