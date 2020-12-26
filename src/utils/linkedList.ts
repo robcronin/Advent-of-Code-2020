@@ -11,16 +11,20 @@ export class LinkedList {
   head: LinkNode | null;
   end: LinkNode | null;
   length: number;
-  constructor(head: LinkNode | null = null) {
-    this.head = head;
-    this.end = head;
-    this.length = head ? 1 : 0;
+  nodeMapper: Map<number, LinkNode>;
+  constructor(array: number[] | null = null) {
+    this.head = null;
+    this.end = null;
+    this.length = 0;
+    this.nodeMapper = new Map();
+    if (array) this.createFromArray(array);
   }
 
   reset(): void {
     this.head = null;
     this.end = null;
     this.length = 0;
+    this.nodeMapper = new Map();
   }
 
   convertToArray(): number[] {
@@ -34,23 +38,13 @@ export class LinkedList {
   }
 
   createFromArray(arr: number[]): void {
-    if (arr.length === 0) {
-      this.reset();
-      return;
-    }
-    this.head = new LinkNode(arr.shift() as number);
-    let lastNode = this.head;
-    this.length = 1;
-    arr.forEach((newValue) => {
-      lastNode.next = new LinkNode(newValue);
-      lastNode = lastNode.next;
-      this.length++;
-    });
-    this.end = lastNode;
+    this.reset();
+    arr.forEach((v) => this.push(v));
   }
 
   push(newValue: number) {
     const newNode = new LinkNode(newValue);
+    this.nodeMapper.set(newValue, newNode);
     if (this.end) {
       this.end.next = newNode;
       this.end = newNode;
@@ -65,6 +59,7 @@ export class LinkedList {
     if (!this.head) return undefined;
 
     const oldHeadValue = this.head.value;
+    this.nodeMapper.delete(oldHeadValue);
     this.length--;
     if (!this.head.next) {
       this.head = null;
@@ -77,24 +72,22 @@ export class LinkedList {
   }
 
   findNode(value: number): LinkNode | undefined {
-    let currentNode: LinkNode | null = this.head;
-    while (currentNode !== null) {
-      if (currentNode.value === value) return currentNode;
-      currentNode = currentNode.next;
-    }
-    return undefined;
+    return this.nodeMapper.get(value);
   }
 
   splice(node: LinkNode, numToDelete: number, newValues: number[]): void {
     if (numToDelete !== 0)
       throw new Error('Not implemented deleting while splicing');
-    if (!node) throw new Error('Passing undefined node to splice');
-    const newList = new LinkedList();
+
+    const newList = new LinkedList(newValues);
+    newValues.forEach((newValue) => {
+      this.nodeMapper.set(newValue, newList.findNode(newValue) as LinkNode);
+    });
+
     const oldEnd = node.next;
-    newList.createFromArray(newValues);
     node.next = newList.head;
-    newList.end.next = oldEnd;
-    if (!oldEnd) this.end = newList.end;
+    if (newList.end) newList.end.next = oldEnd;
+    if (!oldEnd && newValues.length > 0) this.end = newList.end;
     this.length += newList.length;
   }
 }

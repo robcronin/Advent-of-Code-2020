@@ -17,10 +17,8 @@ export const playCupRound = (cupsList: LinkedList): void => {
     }
   }
   const destinationCupNode = cupsList.findNode(destinationCup);
-  if (!destinationCupNode) {
-    console.log(movingCups, currentCup);
+  if (!destinationCupNode)
     throw new Error(`No node found for value: ${destinationCup}`);
-  }
   cupsList.splice(destinationCupNode, 0, movingCups);
   cupsList.push(currentCup);
 };
@@ -59,7 +57,13 @@ export const findProductNextTwoCups = (
   targetCup: number,
 ): number => {
   const targetNode = cupsList.findNode(targetCup) as LinkNode;
-  const cup1 = targetNode.next?.value;
-  const cup2 = targetNode.next?.next.value;
+  const cup1Node = targetNode.next || cupsList.head;
+  if (!cup1Node) throw new Error(`No cup found to the right of ${targetCup}`);
+  const cup2Node = cup1Node.next || cupsList.head;
+  if (!cup2Node)
+    throw new Error(`No cup found two to the right of ${targetCup}`);
+
+  const cup1 = cup1Node.value;
+  const cup2 = cup2Node.value;
   return cup1 * cup2;
 };
