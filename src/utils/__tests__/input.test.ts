@@ -14,6 +14,7 @@ import {
   parseStartingCups,
   parseStartingHands,
   parseTicketInfo,
+  parseTileDirections,
 } from '../input';
 
 test('Parses a newline delimited array of numbers', () => {
@@ -560,5 +561,26 @@ describe('parseStartingHands', () => {
 describe('parseStartingCups', () => {
   it('should parse the starting cups', () => {
     expect(parseStartingCups('12345')).toEqual([1, 2, 3, 4, 5]);
+  });
+});
+
+describe('parseTileDirections', () => {
+  it('should parse the tile directions', () => {
+    const testString = `sesenwnenenewsee
+    neeenesenwnwwswnenew
+    seswneswswsenwwnwse`;
+    expect(parseTileDirections(testString)).toEqual([
+      ['se', 'se', 'nw', 'ne', 'ne', 'ne', 'w', 'se', 'e'],
+      ['ne', 'e', 'e', 'ne', 'se', 'nw', 'nw', 'w', 'sw', 'ne', 'ne', 'w'],
+      ['se', 'sw', 'ne', 'sw', 'sw', 'se', 'nw', 'w', 'nw', 'se'],
+    ]);
+  });
+  it('should throw error if unknown direction found', () => {
+    const testString = `sesenwnenenewseen
+    neeenesenwnwwswnenew
+    seswneswswsenwwnwse`;
+    expect(() => parseTileDirections(testString)).toThrowError(
+      'Unrecognised direction at start of n',
+    );
   });
 });

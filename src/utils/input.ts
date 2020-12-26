@@ -101,6 +101,8 @@ export interface StartingHands {
   player2: number[];
 }
 
+export type TileDirection = 'nw' | 'ne' | 'se' | 'sw' | 'e' | 'w';
+
 const getDelimiter = (input: string) => {
   if (input.includes(',')) {
     return ',';
@@ -387,3 +389,29 @@ export const parseStartingHands = (input: string): StartingHands => {
 
 export const parseStartingCups = (input: string): number[] =>
   [...input].map((num) => +num);
+
+export const parseTileDirections = (input: string): TileDirection[][] => {
+  const parsed = parseLines(input);
+  return parsed.map((line) => {
+    let result: TileDirection[] = [];
+    while (line.length > 0) {
+      const firstTwo = line.substring(0, 2);
+      const first = line.substring(0, 1);
+      if (
+        firstTwo === 'nw' ||
+        firstTwo === 'ne' ||
+        firstTwo === 'sw' ||
+        firstTwo === 'se'
+      ) {
+        result.push(firstTwo);
+        line = line.substring(2);
+      } else if (first === 'w' || first === 'e') {
+        result.push(first);
+        line = line.substring(1);
+      } else {
+        throw new Error(`Unrecognised direction at start of ${line}`);
+      }
+    }
+    return result;
+  });
+};
