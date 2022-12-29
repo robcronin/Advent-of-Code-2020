@@ -5,7 +5,10 @@ Attempt at [Advent Of Code 2020](https://adventofcode.com/2020) written in Types
 - 100% test coverage ✅
 - Refactored and Reusable Code (✅ mostly - day 20 not so much 🤪)
 
+_Completed: 26/12/2020_
+
 ![progress](./progress.png)
+
 
 ---
 
